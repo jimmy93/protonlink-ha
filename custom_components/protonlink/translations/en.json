@@ -63,9 +63,6 @@
       "parked": {"name": "Parked"},
       "trip_logging": {"name": "Trip logging active"},
       "immobilized": {"name": "Immobilised"}
-    },
-    "device_tracker": {
-      "location": {"name": "Location"}
     }
   }
 }

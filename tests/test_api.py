@@ -29,7 +29,7 @@ class FakeResponse:
     def __init__(self, payload: dict) -> None:
         self._payload = payload
 
-    async def __aenter__(self) -> "FakeResponse":
+    async def __aenter__(self) -> FakeResponse:
         return self
 
     async def __aexit__(self, *exc: object) -> bool:
@@ -48,7 +48,13 @@ class FakeSession:
 
     def request(self, method, url, params=None, data=None, headers=None, timeout=None):
         self.requests.append(
-            {"method": method, "url": url, "params": params, "data": data, "headers": headers}
+            {
+                "method": method,
+                "url": url,
+                "params": params,
+                "data": data,
+                "headers": headers,
+            }
         )
         payload = self.payloads.pop(0) if self.payloads else {"code": 200, "data": {}}
         return FakeResponse(payload)

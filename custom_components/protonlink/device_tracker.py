@@ -15,10 +15,10 @@ from homeassistant.components.device_tracker import SourceType, TrackerEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 from .coordinator import ProtonLinkCoordinator
+from .entity import ProtonLinkEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -35,17 +35,20 @@ async def async_setup_entry(
     async_add_entities([ProtonLinkTracker(coordinator)])
 
 
-class ProtonLinkTracker(CoordinatorEntity[ProtonLinkCoordinator], TrackerEntity):
-    """Last known vehicle position, from the trip log's GPS breadcrumbs."""
+class ProtonLinkTracker(ProtonLinkEntity, TrackerEntity):
+    """Last known vehicle position, from the trip log's GPS breadcrumbs.
 
-    _attr_translation_key = "location"
+    Named "Location" like the sibling Geely integration, so it renders as
+    "Proton X50 Location" -- the vehicle name comes from the device, which
+    ``ProtonLinkEntity`` already attaches.
+    """
+
+    _attr_name = "Location"
     _attr_icon = "mdi:car-connected"
 
     def __init__(self, coordinator: ProtonLinkCoordinator) -> None:
         super().__init__(coordinator)
-        vehicle = (coordinator.data or {}).get("vehicle") or {}
-        vin = vehicle.get("vin") or "unknown"
-        self._attr_unique_id = f"{vin}_location"
+        self._attr_unique_id = f"{self.vin}_location"
 
     @property
     def _position(self) -> dict[str, Any] | None:

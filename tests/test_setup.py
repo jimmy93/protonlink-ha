@@ -12,6 +12,7 @@ from unittest.mock import patch
 import pytest
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.const import CONF_PASSWORD
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
@@ -159,6 +160,92 @@ async def test_vehicle_identity_and_diagnostics(hass, fake_client):
     assert 0 < float(remaining.state) < 100
 
 
+async def test_every_entity_shows_its_own_name(hass, fake_client):
+    """Regression: entities must not all collapse to the device name.
+
+    Without ``has_entity_name`` the translation keys are never consulted and
+    every entity falls back to the device name, so the device page showed a
+    column of identical rows all reading "X50".
+    """
+    await _setup(hass)
+
+    expectations = {
+        "odometer": "Odometer",
+        "fuel_level": "Fuel level",
+        "last_trip_distance": "Last trip distance",
+        "last_trip_avg_speed": "Last trip average speed",
+        "trips_recorded": "Trips recorded",
+        "engine_state": "Engine",
+        "data_remaining": "Data allowance remaining",
+        "vin": "VIN",
+        "parked": "Parked",
+        "immobilized": "Immobilised",
+    }
+
+    seen: dict[str, str] = {}
+    for key, label in expectations.items():
+        state = _state_of(hass, key)
+        assert state is not None, f"entity {key!r} was never created"
+        friendly = state.attributes.get("friendly_name")
+        assert friendly, f"entity {key!r} has no friendly_name"
+        assert label in friendly, (
+            f"entity {key!r} is shown as {friendly!r}; expected label {label!r}"
+        )
+        assert friendly not in seen, (
+            f"entities {seen.get(friendly)!r} and {key!r} share the name {friendly!r}"
+        )
+        seen[friendly] = key
+
+
+async def test_all_platforms_attach_to_one_named_device(hass, fake_client):
+    """Sensors, binary sensors and the tracker all hang off the car."""
+    await _setup(hass)
+
+    registry = er.async_get(hass)
+    device_registry = dr.async_get(hass)
+
+    all_entities = {
+        e.unique_id for e in registry.entities.values() if e.platform == DOMAIN
+    }
+    assert all_entities, "no entities were registered"
+
+    # Every entity must point at one and the same device, and that device must
+    # be the car.  Look the device up by id -- stable across HA versions, and
+    # avoids iterating the registry (deprecated in newer releases).
+    device_ids = {
+        e.device_id
+        for e in registry.entities.values()
+        if e.platform == DOMAIN
+    }
+    assert None not in device_ids, "some entities are orphaned (no device)"
+    assert len(device_ids) == 1, f"entities split across devices: {device_ids}"
+
+    device = device_registry.async_get(device_ids.pop())
+    assert device is not None
+    assert (DOMAIN, VIN) in device.identifiers
+    assert device.name == "Proton X50"
+    assert device.manufacturer == "Proton"
+    assert device.serial_number == VIN
+
+    linked = {
+        e.unique_id
+        for e in registry.entities.values()
+        if e.platform == DOMAIN and e.device_id == device.id
+    }
+    assert linked == all_entities, (
+        f"orphaned entities not linked to the device: {sorted(all_entities - linked)}"
+    )
+
+
+async def test_device_tracker_takes_the_vehicle_name(hass, fake_client):
+    """The tracker is labelled with the car's own name plus a role."""
+    await _setup(hass)
+
+    state = _state_of(hass, "location")
+    assert state is not None
+    assert state.attributes["friendly_name"] == "Proton X50 Location"
+
+
 async def test_unload_entry_closes_cleanly(hass, fake_client):
     entry = await _setup(hass)
 
@@ -176,7 +263,9 @@ async def test_setup_fails_gracefully_when_service_is_down(hass):
 
             raise ProtonLinkApiError("network", "connection refused", "login")
 
-    with patch("custom_components.protonlink.coordinator.ProtonLinkClient", BrokenClient):
+    with patch(
+        "custom_components.protonlink.coordinator.ProtonLinkClient", BrokenClient
+    ):
         entry = MockConfigEntry(domain=DOMAIN, data=ENTRY_DATA, unique_id="60123456789")
         entry.add_to_hass(hass)
         assert not await hass.config_entries.async_setup(entry.entry_id)

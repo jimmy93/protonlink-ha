@@ -27,7 +27,6 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 from .coordinator import (
@@ -39,6 +38,7 @@ from .coordinator import (
     SV_STATE,
     ProtonLinkCoordinator,
 )
+from .entity import ProtonLinkEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -257,7 +257,7 @@ async def async_setup_entry(
     )
 
 
-class ProtonLinkSensor(CoordinatorEntity[ProtonLinkCoordinator], SensorEntity):
+class ProtonLinkSensor(ProtonLinkEntity, SensorEntity):
     """A sensor backed by the coordinator snapshot."""
 
     entity_description: ProtonLinkSensorDescription
@@ -269,10 +269,7 @@ class ProtonLinkSensor(CoordinatorEntity[ProtonLinkCoordinator], SensorEntity):
     ) -> None:
         super().__init__(coordinator)
         self.entity_description = description
-        vehicle = _vehicle(coordinator.data or {})
-        vin = vehicle.get("vin") or "unknown"
-        self._attr_unique_id = f"{vin}_{description.key}"
-        self._attr_device_info = _device_info(vehicle)
+        self._attr_unique_id = f"{self.vin}_{description.key}"
 
     @property
     def native_value(self) -> Any:
@@ -283,14 +280,3 @@ class ProtonLinkSensor(CoordinatorEntity[ProtonLinkCoordinator], SensorEntity):
                 "failed to read %s", self.entity_description.key, exc_info=True
             )
             return None
-
-
-def _device_info(vehicle: dict[str, Any]) -> dict[str, Any]:
-    vin = vehicle.get("vin") or "unknown"
-    return {
-        "identifiers": {(DOMAIN, vin)},
-        "manufacturer": vehicle.get("brandName") or "Proton",
-        "name": vehicle.get("matName") or vehicle.get("externalName") or "Proton",
-        "model": vehicle.get("modelName") or vehicle.get("matName"),
-        "serial_number": vin,
-    }

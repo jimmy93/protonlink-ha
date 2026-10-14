@@ -10,5 +10,5 @@
   "issue_tracker": "https://github.com/jimmy93/protonlink-ha/issues",
   "loggers": ["custom_components.protonlink"],
   "requirements": [],
-  "version": "1.0.0"
+  "version": "1.0.1"
 }

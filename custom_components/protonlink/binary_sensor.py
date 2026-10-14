@@ -15,10 +15,10 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 from .coordinator import PARKING_STATE, ProtonLinkCoordinator
+from .entity import ProtonLinkEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -91,9 +91,7 @@ async def async_setup_entry(
     )
 
 
-class ProtonLinkBinarySensor(
-    CoordinatorEntity[ProtonLinkCoordinator], BinarySensorEntity
-):
+class ProtonLinkBinarySensor(ProtonLinkEntity, BinarySensorEntity):
     """A binary sensor backed by the coordinator snapshot."""
 
     entity_description: ProtonLinkBinaryDescription
@@ -105,9 +103,7 @@ class ProtonLinkBinarySensor(
     ) -> None:
         super().__init__(coordinator)
         self.entity_description = description
-        vehicle = (coordinator.data or {}).get("vehicle") or {}
-        vin = vehicle.get("vin") or "unknown"
-        self._attr_unique_id = f"{vin}_{description.key}"
+        self._attr_unique_id = f"{self.vin}_{description.key}"
 
     @property
     def is_on(self) -> bool | None:
