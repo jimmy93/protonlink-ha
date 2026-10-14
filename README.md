@@ -1,3 +1,25 @@
+<p align="center">
+  <img src="custom_components/protonlink/brand/logo@2x.png" alt="Proton Link for Home Assistant" width="380">
+</p>
+
+<p align="center">
+  <a href="https://my.home-assistant.io/redirect/config_flow_start/?domain=protonlink">
+    <img src="https://my.home-assistant.io/badges/config_flow_start.svg" alt="Add integration to Home Assistant">
+  </a>
+  <a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=jimmy93&repository=protonlink-ha&category=integration">
+    <img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Open in HACS">
+  </a>
+  <a href="https://github.com/jimmy93/protonlink-ha/releases">
+    <img src="https://img.shields.io/github/v/release/jimmy93/protonlink-ha?color=41BDF5&label=release" alt="Latest release">
+  </a>
+  <a href="https://github.com/jimmy93/protonlink-ha/actions/workflows/validate.yml">
+    <img src="https://github.com/jimmy93/protonlink-ha/actions/workflows/validate.yml/badge.svg" alt="Validate">
+  </a>
+  <a href="https://github.com/jimmy93/protonlink-ha/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/jimmy93/protonlink-ha?color=41BDF5" alt="License">
+  </a>
+</p>
+
 # Proton Link for Home Assistant
 
 A read-only Home Assistant integration for **Proton** vehicles (Malaysia) that
@@ -10,6 +32,25 @@ its last known position.
 
 > **Read-only by design.** The integration polls telemetry. It contains no
 > endpoint that can start, stop, lock, unlock or otherwise command the vehicle.
+
+## Quick start
+
+If you already run HACS, these two buttons do the whole job:
+
+<p>
+  <a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=jimmy93&repository=protonlink-ha&category=integration">
+    <img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Open in HACS">
+  </a>
+  <a href="https://my.home-assistant.io/redirect/config_flow_start/?domain=protonlink">
+    <img src="https://my.home-assistant.io/badges/config_flow_start.svg" alt="Add integration to Home Assistant">
+  </a>
+</p>
+
+1. **Open in HACS** (left button) → **Download** this repository → restart Home Assistant.
+2. **Add integration to Home Assistant** (right button) → enter your phone number and password.
+
+The buttons only work from a browser that can reach your Home Assistant
+instance; they deep-link into your own setup rather than to GitHub.
 
 ## Installation
 
@@ -37,6 +78,10 @@ automatically.
 
 ## Entities
 
+All entities are grouped under a single device named after your car
+(e.g. `Proton X50`), so a sensor reads `Proton X50 Odometer` and the tracker
+reads `Proton X50 Location`.
+
 | Entity | Description |
 | --- | --- |
 | `sensor.*_odometer` | Total distance travelled (km) |
@@ -50,6 +95,31 @@ automatically.
 
 Diagnostic entities (VIN, model, registration, colour, position upload, trip
 log state) are hidden by default.
+
+### Location on a map
+
+`device_tracker.*_location` gets its coordinates from the **last recorded
+journey**, not from a live GPS feed, so the pin moves when the car reports a
+new trip rather than continuously. Add it to a map card:
+
+```yaml
+type: map
+entities:
+  - device_tracker.proton_x50_location
+```
+
+If the car seems to be missing from the map while it is parked at home, that is
+expected. Home Assistant's map merges markers that sit in the same zone into a
+single bubble — the car, your phone and anyone else at home are all inside
+`zone.home`, so they collapse into the one "home" bubble. Zoom in far enough and
+they separate; drive the car away and its own marker appears.
+
+Two things make the car look absent:
+
+* **It is parked inside a zone** (usually `home`) with other tracked devices, so
+  its marker is grouped into that zone's bubble.
+* **No new trip has been recorded yet.** Until the car reports a journey, the
+  pin stays where the previous one ended.
 
 ## How it works, and its limits
 
@@ -87,6 +157,7 @@ Consequences you should know about:
 | "no Proton vehicle linked to this account" | Credentials are valid but the account has no car. |
 | Entities stop updating | The app logged in elsewhere and rotated the session; it recovers on the next poll. |
 | Odometer is stale | The car has not reported a new trip since it was last driven. |
+| Car missing from the map | It is parked inside `zone.home` with other tracked devices, so its marker is merged into the home bubble. See *Location on a map*. |
 
 Enable debug logging for more detail:
 
