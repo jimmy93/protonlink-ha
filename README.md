@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="custom_components/protonlink/brand/logo@2x.png" alt="Proton Link for Home Assistant" width="380">
+  <img src="https://raw.githubusercontent.com/jimmy93/protonlink-ha/main/custom_components/protonlink/brand/logo@2x.png" alt="Proton Link for Home Assistant" width="380">
 </p>
 
 <p align="center">
