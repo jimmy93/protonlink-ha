@@ -1,95 +1,136 @@
 #!/usr/bin/env python3
 """Generate HACS brand assets for the Proton Link integration.
 
-HACS requires custom_components/<domain>/brand/{icon.png,icon@2x.png}.
-Rendered at 4x then downsampled with LANCZOS for clean antialiased edges.
+Source of truth: brand-src/protonlink-app-icon-1024.png -- the official
+PROTON Link app icon, retrieved from the Apple App Store lookup API for
+bundle id cn.com.ecarx.protonlink (seller: Proton Holdings Berhad) and
+cross-checked pixel-for-pixel against the launcher icon inside the APK of
+that same package.
+
+Emits the files Home Assistant's brand directory accepts:
+  icon.png / icon@2x.png            square avatar (the app tile)
+  logo.png / logo@2x.png            wide lockup, for LIGHT backgrounds
+  dark_logo.png / dark_logo@2x.png  wide lockup, for DARK backgrounds
+
+Lockup hierarchy: the app tile sits on the left, then the brand name in
+large type with "for Home Assistant" set beneath it as a subordinate
+descriptor.  Measured, not eyeballed: at 1024px the tile's own baked-in
+wordmark is only ~41px tall (~9px once scaled into the lockup), so the
+brand name is repeated in readable type rather than left to the tile.
+
+Run:  python make_brand.py
 """
-from PIL import Image, ImageDraw
+import os
 
-S = 1024                      # supersampled working size
-FINAL = 512                   # icon@2x size; icon.png = 256
+from PIL import Image, ImageDraw, ImageFont
+
+SRC = "brand-src/protonlink-app-icon-1024.png"
+OUT = "custom_components/protonlink/brand"
+
+ICON_1X, ICON_2X = 256, 512
+LOGO_H = 256          # logo@2x height; logo.png is exactly half
+SS = 4                # supersample factor for text/corner crispness
+
+# Proton's own store assets use a corner radius of 80/512 = 15.6% of the tile
+# width.  Matching it keeps our tile identical to their presentation.
+CORNER_FRAC = 80 / 512
+
+BRAND = "Proton Link"
+DESCR = "for Home Assistant"
+
+LIGHT_FILL = (31, 54, 71)      # dark slate for light backgrounds
+DARK_FILL = (233, 240, 244)    # near-white for dark backgrounds
+LIGHT_DESC = (88, 104, 118)    # muted but legible, keeps the brand name dominant
+DARK_DESC = (168, 185, 198)
 
 
-def lerp(a, b, t):
-    return tuple(round(a[i] + (b[i] - a[i]) * t) for i in range(3))
+def font(size, bold=True):
+    name = "DejaVuSans-Bold.ttf" if bold else "DejaVuSans.ttf"
+    for path in (
+        f"/usr/share/fonts/truetype/dejavu/{name}",
+        "/usr/share/fonts/truetype/liberation/LiberationSans"
+        f"{'-Bold' if bold else '-Regular'}.ttf",
+    ):
+        try:
+            return ImageFont.truetype(path, size)
+        except OSError:
+            continue
+    return ImageFont.load_default()
 
 
-def gradient(size, top, bottom):
-    """Vertical linear gradient."""
-    img = Image.new("RGB", (size, size))
-    d = ImageDraw.Draw(img)
-    for y in range(size):
-        d.line([(0, y), (size, y)], fill=lerp(top, bottom, y / (size - 1)))
+def rounded(im, radius):
+    """Mask an image to a rounded square with an antialiased edge."""
+    w, h = im.size
+    mask = Image.new("L", (w * SS, h * SS), 0)
+    ImageDraw.Draw(mask).rounded_rectangle(
+        [0, 0, w * SS - 1, h * SS - 1], radius=radius * SS, fill=255
+    )
+    out = im.convert("RGBA")
+    out.putalpha(mask.resize((w, h), Image.LANCZOS))
+    return out
+
+
+# ------------------------------------------------------------------ the tile
+master = Image.open(SRC).convert("RGBA")
+if master.size != (1024, 1024):
+    raise SystemExit(f"unexpected master size {master.size}")
+tile = rounded(master, round(CORNER_FRAC * master.size[0]))
+
+for name, size in (("icon.png", ICON_1X), ("icon@2x.png", ICON_2X)):
+    tile.resize((size, size), Image.LANCZOS).save(f"{OUT}/{name}")
+
+
+# ------------------------------------------------------------------- the logo
+def build_logo(height, brand_fill, desc_fill):
+    """Wide two-line lockup at `height`, width measured from the glyphs."""
+    H = height
+    tile_h = round(H * 0.90)
+    pad = round(H * 0.035)
+    gap = round(H * 0.13)
+    lead = round(H * 0.025)
+
+    f_brand = font(round(tile_h * 0.36))
+    f_desc = font(round(tile_h * 0.20), bold=False)
+
+    probe = ImageDraw.Draw(Image.new("RGB", (8, 8)))
+    tw = max(
+        int(probe.textlength(BRAND, font=f_brand)),
+        int(probe.textlength(DESCR, font=f_desc)),
+    )
+    W = pad * 2 + tile_h + gap + tw
+
+    img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    img.alpha_composite(
+        tile.resize((tile_h, tile_h), Image.LANCZOS), (pad, (H - tile_h) // 2)
+    )
+
+    ab = f_brand.getmetrics()
+    ad = f_desc.getmetrics()
+    block = ab[0] + ab[1] + lead + ad[0] + ad[1]
+    x = pad + tile_h + gap
+    y = (H - block) // 2
+
+    draw = ImageDraw.Draw(img)
+    draw.text((x, y), BRAND, font=f_brand, fill=brand_fill, anchor="la")
+    draw.text(
+        (x, y + ab[0] + ab[1] + lead), DESCR, font=f_desc, fill=desc_fill,
+        anchor="la",
+    )
     return img
 
 
-# Deep Proton blue -> teal.  Original artwork; deliberately NOT the Proton
-# tiger/shield trademark.
-BG_TOP = (26, 78, 138)
-BG_BOTTOM = (13, 155, 168)
-WHITE = (255, 255, 255)
-WHEEL = (18, 40, 66)
+for base, bf, df in (
+    ("logo", LIGHT_FILL, LIGHT_DESC),
+    ("dark_logo", DARK_FILL, DARK_DESC),
+):
+    # Build at 2x then halve, so logo.png is EXACTLY half of logo@2x.png.
+    big = build_logo(LOGO_H * 2, bf, df)
+    big.resize((big.width // 2, LOGO_H), Image.LANCZOS).save(f"{OUT}/{base}@2x.png")
+    big.resize((big.width // 4, LOGO_H // 2), Image.LANCZOS).save(f"{OUT}/{base}.png")
 
-img = gradient(S, BG_TOP, BG_BOTTOM).convert("RGBA")
-
-# Rounded-square mask (HA icons sit on a rounded tile).
-mask = Image.new("L", (S, S), 0)
-ImageDraw.Draw(mask).rounded_rectangle([0, 0, S - 1, S - 1], radius=225, fill=255)
-tile = Image.new("RGBA", (S, S), (0, 0, 0, 0))
-tile.paste(img, (0, 0), mask)
-d = ImageDraw.Draw(tile)
-
-# --- connectivity arcs (the "Link") ---------------------------------------
-cx, cy = S // 2, 470
-for i, r in enumerate((300, 214, 128)):
-    box = [cx - r, cy - r, cx + r, cy + r]
-    d.arc(box, start=205, end=335, fill=WHITE, width=42)
-
-# --- car silhouette -------------------------------------------------------
-# cabin (trapezoid)
-d.polygon([(352, 700), (438, 566), (612, 566), (688, 700)], fill=WHITE)
-# body
-d.rounded_rectangle([176, 672, 848, 800], radius=54, fill=WHITE)
-# wheels
-for wx in (312, 712):
-    d.ellipse([wx - 74, 742, wx + 74, 890], fill=WHEEL)
-    d.ellipse([wx - 28, 788, wx + 28, 844], fill=WHITE)
-
-# --- emit -----------------------------------------------------------------
-tile.resize((FINAL, FINAL), Image.LANCZOS).save(
-    "custom_components/protonlink/brand/icon@2x.png"
-)
-tile.resize((FINAL // 2, FINAL // 2), Image.LANCZOS).save(
-    "custom_components/protonlink/brand/icon.png"
-)
-
-# Optional wide logo with wordmark.
-logo = Image.new("RGBA", (S * 2, S), (0, 0, 0, 0))
-logo.paste(tile, (0, 0), tile)
-dl = ImageDraw.Draw(logo)
-from PIL import ImageFont
-
-try:
-    f1 = ImageFont.truetype(
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 150
-    )
-    f2 = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 78)
-except OSError:
-    f1 = f2 = ImageFont.load_default()
-
-dl.text((S + 60, 350), "Proton Link", font=f1, fill=WHITE, anchor="lm")
-dl.text((S + 64, 490), "Home Assistant", font=f2, fill=(200, 228, 240), anchor="lm")
-
-logo.resize((FINAL * 2, FINAL), Image.LANCZOS).save(
-    "custom_components/protonlink/brand/logo@2x.png"
-)
-logo.resize((FINAL, FINAL // 2), Image.LANCZOS).save(
-    "custom_components/protonlink/brand/logo.png"
-)
-
-print("brand assets written:")
-import os
-
-for f in sorted(os.listdir("custom_components/protonlink/brand")):
-    p = f"custom_components/protonlink/brand/{f}"
-    print(f"  {f}  {os.path.getsize(p)} bytes")
+# ------------------------------------------------------------------- report
+print("brand assets written from", SRC)
+for f in sorted(os.listdir(OUT)):
+    p = f"{OUT}/{f}"
+    with Image.open(p) as im:
+        print(f"  {f:18} {im.size[0]:4}x{im.size[1]:<4} {os.path.getsize(p):>6} bytes")
