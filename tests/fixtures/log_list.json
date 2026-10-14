@@ -1,0 +1,86 @@
+{
+  "code": 200,
+  "msg": "Operation successful",
+  "data": {
+    "pagination": {
+      "pageSize": 2,
+      "pageIndex": 1,
+      "totleSize": 4483,
+      "start": 1,
+      "direction": "",
+      "sortField": "startTime"
+    },
+    "list": [
+      {
+        "fuelConsumption": 1.0,
+        "traveledDistance": 5.6,
+        "avgSpeed": 15.73,
+        "startFuelLevel": 28.5,
+        "startElectricConsumption": 0.0,
+        "startOdometer": 114828.6,
+        "startTime": 1791720566806,
+        "endFuelLevel": 27.5,
+        "endElectricConsumption": 0.0,
+        "endOdometer": 114834.2,
+        "endTime": 1791721848159,
+        "trackpoints": [
+          {
+            "position": {
+              "altitude": 104,
+              "latitude": 10251039,
+              "longitude": 366564225,
+              "posCanBeTrusted": true,
+              "carLocatorStatUploadEn": false,
+              "marsCoordinates": false
+            }
+          },
+          {
+            "position": {
+              "altitude": 69,
+              "latitude": 10250902,
+              "longitude": 366563595,
+              "posCanBeTrusted": true,
+              "carLocatorStatUploadEn": false,
+              "marsCoordinates": false
+            }
+          }
+        ]
+      },
+      {
+        "fuelConsumption": 1.5,
+        "traveledDistance": 11.0,
+        "avgSpeed": 14.08,
+        "startFuelLevel": 30.0,
+        "startElectricConsumption": 0.0,
+        "startOdometer": 114817.6,
+        "startTime": 1791717473914,
+        "endFuelLevel": 28.5,
+        "endElectricConsumption": 0.0,
+        "endOdometer": 114828.6,
+        "endTime": 1791720286580,
+        "trackpoints": [
+          {
+            "position": {
+              "altitude": 44,
+              "latitude": 10379307,
+              "longitude": 366438934,
+              "posCanBeTrusted": true,
+              "carLocatorStatUploadEn": false,
+              "marsCoordinates": false
+            }
+          },
+          {
+            "position": {
+              "altitude": 76,
+              "latitude": 10250712,
+              "longitude": 366564081,
+              "posCanBeTrusted": true,
+              "carLocatorStatUploadEn": false,
+              "marsCoordinates": false
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

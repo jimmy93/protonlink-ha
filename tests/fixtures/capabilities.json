@@ -1,0 +1,386 @@
+{
+  "code": 200,
+  "msg": "Operation successful",
+  "data": {
+    "vin": "PL1DG2FVRMG000000",
+    "modelCode": "DG2FVPKRMA0-MH0",
+    "list": [
+      {
+        "itemCode": "A001X001",
+        "parentCode": "0",
+        "parentCodes": "0",
+        "itemName": "Remote control",
+        "isHasChild": true,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X001Y001-RHL",
+        "parentCode": "A001X001",
+        "parentCodes": "0,A001X001",
+        "itemName": "Honk flash1.0/2.0/3.0 远程鸣笛闪烁1.0/2.0/3.0",
+        "isHasChild": false,
+        "abilityValue": [
+          {
+            "itemName": "Honk flash1.0/2.0/3.0 远程鸣笛闪烁1.0/2.0/3.0",
+            "itemValue": "1,2,,",
+            "itemValueType": 1
+          }
+        ]
+      },
+      {
+        "itemCode": "A001X001Y002-RTU",
+        "parentCode": "A001X001",
+        "parentCodes": "0,A001X001",
+        "itemName": "Remote trunk unlock1.0 解锁后备箱1.0",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X001Y003-RWS",
+        "parentCode": "A001X001",
+        "parentCodes": "0,A001X001",
+        "itemName": "Remote window open1.0/2.0/3.0 远程车窗打开1.0/2.0/3.0",
+        "isHasChild": false,
+        "abilityValue": [
+          {
+            "itemName": "Remote window open1.0/2.0/3.0 远程车窗打开1.0/2.0/3.0",
+            "itemValue": "3,4,",
+            "itemValueType": 1
+          }
+        ]
+      },
+      {
+        "itemCode": "A001X001Y004-RWS",
+        "parentCode": "A001X001",
+        "parentCodes": "0,A001X001",
+        "itemName": "Remote window close1.0/2.0/3.0 远程车窗关闭1.0/2.0/3.0",
+        "isHasChild": false,
+        "abilityValue": [
+          {
+            "itemName": "Remote window close1.0/2.0/3.0 远程车窗关闭1.0/2.0/3.0",
+            "itemValue": "3,4,",
+            "itemValueType": 1
+          }
+        ]
+      },
+      {
+        "itemCode": "A001X001Y005-RWS",
+        "parentCode": "A001X001",
+        "parentCodes": "0,A001X001",
+        "itemName": "Remote window ventilate1.0 远程一键透气1.0",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X001Y006-RDL",
+        "parentCode": "A001X001",
+        "parentCodes": "0,A001X001",
+        "itemName": "Remote centra lockstatus1.0 远程中控锁状态1.0",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X001Y007-RDL",
+        "parentCode": "A001X001",
+        "parentCodes": "0,A001X001",
+        "itemName": "Door lock open control1.0 远程控制车锁打开1.0",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X001Y008-JOU",
+        "parentCode": "A001X001",
+        "parentCodes": "0,A001X001",
+        "itemName": "Logbook JOU switch1.0 行车日志JOU开关1.0",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X001Y010-RDU",
+        "parentCode": "A001X001",
+        "parentCodes": "0,A001X001",
+        "itemName": "Door lock unlocks1.0 远程控制车锁解锁1.0",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X002",
+        "parentCode": "0",
+        "parentCodes": "0",
+        "itemName": "LBS service",
+        "isHasChild": true,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X002Y002-PICKUPFRIEND",
+        "parentCode": "A001X002",
+        "parentCodes": "0,A001X002",
+        "itemName": "Pickup friends",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X002Y004",
+        "parentCode": "A001X002",
+        "parentCodes": "0,A001X002",
+        "itemName": "Send to car enable",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003",
+        "parentCode": "0",
+        "parentCodes": "0",
+        "itemName": "Remote status",
+        "isHasChild": true,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y001",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Fuel tank capacity",
+        "isHasChild": false,
+        "abilityValue": [
+          {
+            "itemName": "FuelTankCapacity 油箱容量配置",
+            "itemValue": "49",
+            "itemValueType": 2
+          }
+        ]
+      },
+      {
+        "itemCode": "A001X003Y002",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Total mileage",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y003",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Hood status display",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y004",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Trunk status display",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y005",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Door status display",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y006",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Sunroof status display",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y007",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Vehicle position display",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y008",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Fuel consumption per hundred kilometers",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y009",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Remaining fuel capacity 远程剩余油量显示",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y010",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Drving log",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y011",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Remote dashboard",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y012",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Door lock status display",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y013",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Average speed single time",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y014",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Trip mileage",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y015",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Driving time single time",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y016",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Window status display",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y017",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Fuel mileage display 油量可续航里程显示",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y019",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Average speed display",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y020",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Parking sign display",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y021",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Oil Pressure Warning",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X003Y022",
+        "parentCode": "A001X003",
+        "parentCodes": "0,A001X003",
+        "itemName": "Fuel consumption single time",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X004",
+        "parentCode": "0",
+        "parentCodes": "0",
+        "itemName": "Setting",
+        "isHasChild": true,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X004Y001",
+        "parentCode": "A001X004",
+        "parentCodes": "0,A001X004",
+        "itemName": "Geography fencing",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X004Y002",
+        "parentCode": "A001X004",
+        "parentCodes": "0,A001X004",
+        "itemName": "Pin switch",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X005",
+        "parentCode": "0",
+        "parentCodes": "0",
+        "itemName": "Other setting",
+        "isHasChild": true,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X005Y002",
+        "parentCode": "A001X005",
+        "parentCodes": "0,A001X005",
+        "itemName": "Low voltage warning",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X005Y003",
+        "parentCode": "A001X005",
+        "parentCodes": "0,A001X005",
+        "itemName": "Qr scan",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X006",
+        "parentCode": "0",
+        "parentCodes": "0",
+        "itemName": "Remote start",
+        "isHasChild": true,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X006Y001-RCE",
+        "parentCode": "A001X006",
+        "parentCodes": "0,A001X006",
+        "itemName": "Remote climate control open1.0/2.0/3.0 远程空调开启1.0/2.0/3.0",
+        "isHasChild": false,
+        "abilityValue": []
+      },
+      {
+        "itemCode": "A001X006Y002-RES",
+        "parentCode": "A001X006",
+        "parentCodes": "0,A001X006",
+        "itemName": "Remote control engine start1.0 远程开启引擎1.0",
+        "isHasChild": false,
+        "abilityValue": []
+      }
+    ]
+  }
+}

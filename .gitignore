@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Home Assistant runtime artefacts
+*.db
+*.db-*
+.storage/
+home-assistant.log*
+configuration.yaml
+
+# Secrets — never commit credentials
+.proton_secret
+.proton_token
+secrets.yaml

@@ -1,0 +1,8 @@
+{
+  "name": "Proton Link",
+  "content_in_root": false,
+  "render_readme": true,
+  "zip_release": false,
+  "country": ["MY"],
+  "homeassistant": "2024.8.0"
+}

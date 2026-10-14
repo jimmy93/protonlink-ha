@@ -1,0 +1,8 @@
+{
+  "code": 200,
+  "msg": "Operation successful",
+  "data": {
+    "residueFlow": "1838692.04",
+    "usedFlow": "258459.96"
+  }
+}

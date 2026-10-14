@@ -1,0 +1,7 @@
+{
+  "code": 200,
+  "msg": "Operation successful",
+  "data": {
+    "parkingStatus": "1"
+  }
+}

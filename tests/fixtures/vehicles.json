@@ -1,0 +1,32 @@
+{
+  "code": 200,
+  "msg": "Operation successful",
+  "data": [
+    {
+      "vin": "PL1DG2FVRMG000000",
+      "plateNum": "WXX1234",
+      "userPlateNum": "",
+      "brandCode": "acotech",
+      "brandName": "acotech",
+      "seriesCode": "STD-PLINK-SX",
+      "seriesName": "STD-PLINK-SX_STANDARD PROTON L",
+      "matCode": "P590A",
+      "matName": "X50",
+      "modelCode": "DG2FVPKRMA0-MH0",
+      "modelName": "P590A-1.5TD-7DCT-P-MH0",
+      "externalName": "",
+      "colorCode": "PASRED-A0250",
+      "colorName": "SOLID PASSION RED 2K-A0250 (TG",
+      "userColorId": "",
+      "userColorCode": "",
+      "userColorName": "",
+      "imageUrl": "http://proton-file.obs.my-kualalumpur-1.alphaedge.tmone.com.my:80/3d05c07bbf2c1ba10da7bcd0a7e5ab601626922566811.png",
+      "isDefault": true,
+      "msisdn": "",
+      "maintenanceState": "2",
+      "drivenDistance": 0,
+      "drivenDistanceTime": 1791963895722,
+      "engineNo": "JLH3G15TDLBUA6005885"
+    }
+  ]
+}

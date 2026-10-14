@@ -1,0 +1,18 @@
+{
+  "code": 200,
+  "msg": "Operation successful",
+  "data": {
+    "userId": "100000000000000000000000",
+    "gender": "Male",
+    "mobilePhone": "60123456789",
+    "name": "",
+    "avatarUrl": "",
+    "birth": "",
+    "email": "",
+    "profile": "",
+    "address": "",
+    "joinCommunityDays": "1870",
+    "backgroundUrl": "",
+    "userLabelList": []
+  }
+}

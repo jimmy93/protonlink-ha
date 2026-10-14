@@ -1,0 +1,14 @@
+{
+  "code": 200,
+  "msg": "Operation successful",
+  "data": {
+    "svtState": 0,
+    "activateState": 0,
+    "engineState": 0,
+    "powerMode": 0,
+    "positionUploadState": 0,
+    "journalLogState": 1,
+    "immobilizationState": 0,
+    "vin": ""
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "code": 200,
+  "msg": "Operation successful",
+  "data": {
+    "accessToken": "SANITISED-TOKEN",
+    "refreshToken": "SANITISED-TOKEN",
+    "userId": "100000000000000000000000",
+    "ecarxAccessToken": "SANITISED-TOKEN"
+  }
+}

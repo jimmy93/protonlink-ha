@@ -1,0 +1,71 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Proton Link account",
+        "description": "Sign in with the same phone number and password you use in the Proton Link app. The integration is read-only: it can read vehicle status but cannot start, lock or command the car.",
+        "data": {
+          "mobile_phone": "Phone number",
+          "password": "Password"
+        },
+        "data_description": {
+          "mobile_phone": "Malaysian mobile number, e.g. 60123456789. A leading + or 0 is accepted and converted."
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Incorrect phone number or password.",
+      "invalid_phone": "That does not look like a valid Malaysian mobile number.",
+      "no_vehicle": "These credentials are valid, but there is no Proton vehicle linked to this account.",
+      "cannot_connect": "Could not reach the Proton Link service. Check your internet connection and try again.",
+      "unknown": "Unexpected error. Check the Home Assistant log for details."
+    },
+    "abort": {
+      "already_configured": "This Proton Link account is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Proton Link options",
+        "data": {
+          "scan_interval": "Update interval (minutes)"
+        },
+        "data_description": {
+          "scan_interval": "How often to poll the service. The car only uploads data periodically, so a shorter interval rarely yields newer values."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "vin": {"name": "VIN"},
+      "model": {"name": "Model"},
+      "plate": {"name": "Registration number"},
+      "colour": {"name": "Colour"},
+      "odometer": {"name": "Odometer"},
+      "fuel_level": {"name": "Fuel level"},
+      "last_trip_distance": {"name": "Last trip distance"},
+      "last_trip_avg_speed": {"name": "Last trip average speed"},
+      "last_trip_started": {"name": "Last trip started"},
+      "last_trip_ended": {"name": "Last trip ended"},
+      "trips_recorded": {"name": "Trips recorded"},
+      "engine_state": {"name": "Engine"},
+      "power_mode": {"name": "Power mode"},
+      "immobilization": {"name": "Immobiliser"},
+      "svt_state": {"name": "Vehicle tracking"},
+      "position_upload": {"name": "Position upload"},
+      "trip_log_state": {"name": "Trip logging"},
+      "data_remaining": {"name": "Data allowance remaining"},
+      "data_used": {"name": "Data allowance used"}
+    },
+    "binary_sensor": {
+      "parked": {"name": "Parked"},
+      "trip_logging": {"name": "Trip logging active"},
+      "immobilized": {"name": "Immobilised"}
+    },
+    "device_tracker": {
+      "location": {"name": "Location"}
+    }
+  }
+}
