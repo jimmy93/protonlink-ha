@@ -128,6 +128,77 @@ for base, bf, df in (
     big.resize((big.width // 2, LOGO_H), Image.LANCZOS).save(f"{OUT}/{base}@2x.png")
     big.resize((big.width // 4, LOGO_H // 2), Image.LANCZOS).save(f"{OUT}/{base}.png")
 
+# ------------------------------------------------- README hero (plain <img>)
+# HACS renders the README through HA's ha-markdown, whose sanitiser whitelist
+# allows <img> but NOT <picture>/<source> -- those get escaped and shown as
+# literal code.  A transparent lockup would also be unreadable against one of
+# GitHub's two themes, so the hero is composited onto an OPAQUE light panel:
+# a single plain <img> that is correct in HACS, and on GitHub light and dark.
+PANEL_BG = (247, 249, 250)
+PANEL_EDGE = (223, 230, 236)
+HERO_H = 256
+
+
+def build_hero():
+    """Opaque card: app tile + two-line lockup, legible on any background.
+
+    The panel width is measured from the glyphs and the tile rather than being
+    fixed, so the card has even margins instead of a dead pocket under the
+    shorter second line.
+    """
+    H = HERO_H
+    tile_h = round(H * 0.60)
+    pad = round(H * 0.11)
+    gap = round(H * 0.09)
+    lead = round(H * 0.02)
+
+    f_brand = font(round(tile_h * 0.46))
+    f_desc = font(round(tile_h * 0.24), bold=False)
+
+    probe = ImageDraw.Draw(Image.new("RGB", (8, 8)))
+    tw = max(
+        int(probe.textlength(BRAND, font=f_brand)),
+        int(probe.textlength(DESCR, font=f_desc)),
+    )
+    W = pad * 2 + tile_h + gap + tw
+
+    img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle(
+        [0, 0, W - 1, H - 1],
+        radius=round(H * 0.10),
+        fill=PANEL_BG,
+        outline=PANEL_EDGE,
+        width=2,
+    )
+
+    img.alpha_composite(
+        tile.resize((tile_h, tile_h), Image.LANCZOS),
+        (pad, (H - tile_h) // 2),
+    )
+
+    ab, ad = f_brand.getmetrics(), f_desc.getmetrics()
+    block = ab[0] + ab[1] + lead + ad[0] + ad[1]
+    x = pad + tile_h + gap
+    y = (H - block) // 2
+
+    d.text((x, y), BRAND, font=f_brand, fill=LIGHT_FILL, anchor="la")
+    d.text(
+        (x, y + ab[0] + ab[1] + lead), DESCR, font=f_desc, fill=LIGHT_DESC,
+        anchor="la",
+    )
+    return img
+
+
+os.makedirs("assets", exist_ok=True)
+hero = build_hero()
+hero.save("assets/logo-hero.png")
+hero.resize((hero.width // 2, hero.height // 2), Image.LANCZOS).save(
+    "assets/logo-hero@1x.png"
+)
+print(f"hero: {hero.size[0]}x{hero.size[1]}")
+
+
 # ------------------------------------------------------------------- report
 print("brand assets written from", SRC)
 for f in sorted(os.listdir(OUT)):

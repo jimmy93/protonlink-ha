@@ -1,8 +1,5 @@
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/jimmy93/protonlink-ha/main/custom_components/protonlink/brand/dark_logo@2x.png">
-    <img src="https://raw.githubusercontent.com/jimmy93/protonlink-ha/main/custom_components/protonlink/brand/logo@2x.png" alt="Proton Link for Home Assistant" width="380">
-  </picture>
+  <img src="https://raw.githubusercontent.com/jimmy93/protonlink-ha/main/assets/logo-hero.png" alt="Proton Link for Home Assistant" width="380">
 </p>
 
 <p align="center">
