@@ -21,7 +21,6 @@ confirmed against the live service):
 
 from __future__ import annotations
 
-import asyncio
 import hashlib
 import json
 import logging
@@ -30,13 +29,12 @@ from typing import Any
 import aiohttp
 
 from .const import (
-    API_APP_ID,
     API_BASE_URL,
     API_ENV_TYPE,
     API_HEADERS,
     API_TIMEOUT,
     CODE_OK,
-    CODE_TOKEN_TIMEOUT,
+    RELOGIN_CODES,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -152,7 +150,7 @@ class ProtonLinkClient:
                 timeout=aiohttp.ClientTimeout(total=API_TIMEOUT),
             ) as resp:
                 raw = await resp.text()
-        except asyncio.TimeoutError as err:
+        except TimeoutError as err:
             raise ProtonLinkApiError("timeout", "request timed out", endpoint) from err
         except aiohttp.ClientError as err:
             raise ProtonLinkApiError("network", str(err), endpoint) from err
@@ -173,11 +171,14 @@ class ProtonLinkClient:
         if code == CODE_OK:
             return envelope.get("data")
 
-        # Session no longer valid -> one transparent re-login.
+        # Session no longer usable -> one transparent re-login.  Both 40006
+        # (token rotated) and 40009 (device binding changed, e.g. the phone app
+        # logged in elsewhere) are recovered the same way the official app does
+        # it: drop the token and authenticate again.
         if (
             authenticated
             and retry_on_session_error
-            and str(code) == CODE_TOKEN_TIMEOUT
+            and str(code) in RELOGIN_CODES
         ):
             await self._async_relogin()
             return await self._async_request(

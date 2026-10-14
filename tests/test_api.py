@@ -136,10 +136,29 @@ async def test_token_timeout_triggers_one_relogin():
     assert session.last["headers"]["AUTHORIZATION"] == "NEW"
 
 
-async def test_device_changed_is_not_retried_forever():
-    """40009 must surface as an error, not loop on re-login."""
+async def test_device_changed_is_recovered_by_one_relogin():
+    """40009 (device binding changed) recovers the same way the app does."""
     session = FakeSession(
-        login_ok("T"),
+        login_ok("T1"),
+        {"code": 40009, "msg": "DEVICE IS CHANGED"},   # first attempt
+        login_ok("T2"),                                 # re-login with same deviceId
+        {"code": 200, "data": [{"vin": "V"}]},          # retry succeeds
+    )
+    client = make_client(session)
+    await client.async_login()
+    assert await client.async_get_vehicles() == [{"vin": "V"}]
+    assert len(session.requests) == 4
+    assert session.last["headers"]["AUTHORIZATION"] == "T2"
+    # The re-login must reuse the identical device binding.
+    assert json.loads(session.requests[2]["data"])["deviceId"] == DEVICE
+
+
+async def test_persistent_device_changed_surfaces_after_one_retry():
+    """40009 must not loop forever: it retries once, then raises."""
+    session = FakeSession(
+        login_ok("T1"),
+        {"code": 40009, "msg": "DEVICE IS CHANGED"},
+        login_ok("T2"),
         {"code": 40009, "msg": "DEVICE IS CHANGED"},
     )
     client = make_client(session)
@@ -147,6 +166,7 @@ async def test_device_changed_is_not_retried_forever():
     with pytest.raises(ProtonLinkApiError) as err:
         await client.async_get_vehicles()
     assert str(err.value.code) == "40009"
+    assert len(session.requests) == 4  # initial + retry, not unbounded
 
 
 async def test_entitlement_error_surfaces_cleanly():

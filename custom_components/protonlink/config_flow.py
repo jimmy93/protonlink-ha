@@ -14,7 +14,12 @@ from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers import selector
 
 from .api import ProtonLinkApiError, ProtonLinkAuthError, ProtonLinkClient
-from .const import API_DEVICE_ID_LENGTH, CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL, DOMAIN
+from .const import (
+    API_DEVICE_ID_LENGTH,
+    CONF_SCAN_INTERVAL,
+    DEFAULT_SCAN_INTERVAL,
+    DOMAIN,
+)
 
 CONF_MOBILE_PHONE = "mobile_phone"
 CONF_DEVICE_ID = "device_id"

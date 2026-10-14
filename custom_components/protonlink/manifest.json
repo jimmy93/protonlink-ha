@@ -1,14 +1,14 @@
 {
   "domain": "protonlink",
   "name": "Proton Link",
-  "version": "1.0.0",
-  "documentation": "https://github.com/jimmy93/protonlink-ha",
-  "issue_tracker": "https://github.com/jimmy93/protonlink-ha/issues",
-  "dependencies": [],
   "codeowners": ["@jimmy93"],
   "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/jimmy93/protonlink-ha",
   "integration_type": "hub",
   "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/jimmy93/protonlink-ha/issues",
   "loggers": ["custom_components.protonlink"],
-  "requirements": []
+  "requirements": [],
+  "version": "1.0.0"
 }

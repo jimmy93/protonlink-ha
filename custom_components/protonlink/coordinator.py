@@ -23,7 +23,7 @@ therefore derives the equivalent values from endpoints that are *not* gated:
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import aiohttp
@@ -61,7 +61,7 @@ PARKING_STATE = {"0": "off", "1": "on"}
 def _ms_to_dt(value: Any) -> datetime | None:
     """Convert an epoch-millisecond value to an aware UTC datetime."""
     try:
-        return datetime.fromtimestamp(int(value) / 1000, tz=timezone.utc)
+        return datetime.fromtimestamp(int(value) / 1000, tz=UTC)
     except (TypeError, ValueError, OSError):
         return None
 
@@ -199,7 +199,7 @@ class ProtonLinkCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             snapshot["trip_total"] = None
 
         snapshot["telematics_available"] = False  # realtimeData is entitlement-gated
-        snapshot["last_updated"] = datetime.now(timezone.utc)
+        snapshot["last_updated"] = datetime.now(UTC)
         return snapshot
 
     # ------------------------------------------------------------ normalise --

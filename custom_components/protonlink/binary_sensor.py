@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable
+from typing import Any
 
 from homeassistant.components.binary_sensor import (
     BinarySensorEntity,
@@ -85,7 +86,8 @@ async def async_setup_entry(
         "coordinator"
     ]
     async_add_entities(
-        ProtonLinkBinarySensor(coordinator, description) for description in BINARY_SENSORS
+        ProtonLinkBinarySensor(coordinator, description)
+        for description in BINARY_SENSORS
     )
 
 
