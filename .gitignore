@@ -17,3 +17,6 @@ configuration.yaml
 .proton_secret
 .proton_token
 secrets.yaml
+
+# Tool caches
+.ruff_cache/
